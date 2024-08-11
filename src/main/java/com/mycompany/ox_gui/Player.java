@@ -4,11 +4,13 @@
  */
 package com.mycompany.ox_gui;
 
+import java.io.Serializable;
+
 /**
  *
  * @author teeraphat
  */
-public class Player {
+public class Player implements Serializable{
 
     private char symbol;
     private int winCount;

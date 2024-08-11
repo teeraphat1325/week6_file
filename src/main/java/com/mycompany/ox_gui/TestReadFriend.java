@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * @author teeraphat
  */
 public class TestReadFriend {
+
     public static void main(String[] args) {
         FileInputStream fis = null;
         try {
@@ -36,7 +37,7 @@ public class TestReadFriend {
             Logger.getLogger(TestReadFriend.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                if(fis != null){
+                if (fis != null) {
                     fis.close();
                 }
             } catch (IOException ex) {

@@ -4,6 +4,16 @@
  */
 package com.mycompany.ox_gui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author teeraphat
@@ -23,7 +33,59 @@ public class GameFrame extends javax.swing.JFrame {
         initComponents();
         o = new Player('O');
         x = new Player('X');
+        
         load();
+    }
+
+    private void writePlayer() {
+        FileOutputStream fos = null;
+        try {
+            File file = new File("players.dat");
+            fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(x);
+            oos.writeObject(o);
+            oos.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private void readPlayer() {
+        FileInputStream fis = null;
+        try {
+            File file = new File("players.dat");
+            fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            x = (Player) ois.readObject();
+            o = (Player) ois.readObject();
+            ois.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(GameFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 
     public void showTable() {
@@ -508,7 +570,7 @@ public class GameFrame extends javax.swing.JFrame {
         } else {
             lblStatus.setText("" + board.getCurrentPlayer().getSymbol() + " Win!!!");
         }
-
+        writePlayer();
         setEnableBoard(false);
         btnNewGame.setEnabled(true);
 
@@ -595,6 +657,7 @@ public class GameFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void load() {
+        readPlayer();
         board = new Board(o, x);
         showTable();
         showTurn();
@@ -603,12 +666,12 @@ public class GameFrame extends javax.swing.JFrame {
     }
 
     private void showPlayerInfo() {
-        lblXWin.setText("Win: "+x.getWinCount());
-        lblXLoss.setText("Loss: "+x.getLoseCount());
-        lblXDraw.setText("Win: "+x.getDrawCount());
-        lblOWin.setText("Win: "+o.getWinCount());
-        lblOLoss.setText("Loss: "+o.getLoseCount());
-        lblODraw.setText("Win: "+o.getDrawCount());
-        
+        lblXWin.setText("Win: " + x.getWinCount());
+        lblXLoss.setText("Loss: " + x.getLoseCount());
+        lblXDraw.setText("Win: " + x.getDrawCount());
+        lblOWin.setText("Win: " + o.getWinCount());
+        lblOLoss.setText("Loss: " + o.getLoseCount());
+        lblODraw.setText("Win: " + o.getDrawCount());
+
     }
 }
